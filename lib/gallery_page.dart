@@ -1,12 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:managing_state_flutter/photo.dart';
+import 'package:managing_state_flutter/photo_state.dart';
 
 class GalleryPage extends StatelessWidget {
   final String title;
-  final List<String> urls;
+  final List<PhotoState> photoStates;
+  final bool tagging;
 
-  GalleryPage({this.title, this.urls});
+  final Function toggleTagging;
+  final Function onPhotoSelect;
+
+  GalleryPage(
+      {this.title,
+      this.photoStates,
+      this.tagging,
+      this.toggleTagging,
+      this.onPhotoSelect});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +25,12 @@ class GalleryPage extends StatelessWidget {
       body: GridView.count(
         primary: true,
         crossAxisCount: 2,
-        children: List.of(urls.map((e) => Photo(url: e))),
+        children: List.of(photoStates.map((e) => Photo(
+              state: e,
+              isSelected: tagging,
+              onLongPress: toggleTagging,
+              onSelect: onPhotoSelect,
+            ))),
       ),
     );
   }
