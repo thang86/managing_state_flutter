@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:managing_state_flutter/photo_state.dart';
 
@@ -16,8 +15,6 @@ const List<String> urls = [
 ];
 
 class App extends StatefulWidget {
-  const App({Key key}) : super(key: key);
-
   @override
   _AppState createState() => _AppState();
 }
@@ -52,14 +49,12 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Home App",
-      home: GalleryPage(
-          title: "Image Gallery",
-          photoStates: photoStates,
-          tagging: isTagging,
-          toggleTagging: toggleTagging,
-          onPhotoSelect: onSelectPhoto
-      )
-    );
+        title: "Home App",
+        home: GalleryPage(
+            title: "Image Gallery",
+            photoStates: photoStates,
+            tagging: isTagging,
+            toggleTagging: toggleTagging,
+            onPhotoSelect: onSelectPhoto));
   }
 }

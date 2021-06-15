@@ -17,40 +17,34 @@ class Photo extends StatelessWidget {
     List<Widget> children = [
       GestureDetector(
         child: Image.network(state.url),
-        onLongPress:() => onLongPress(state.url),
+        onLongPress: () => onLongPress(state.url),
       )
     ];
-    if(isSelected){
+    if (isSelected) {
       children.add(Positioned(
-        top: 20,
+          top: 20,
           left: 20,
           child: Theme(
-            data: Theme.of(context).copyWith(unselectedWidgetColor: Colors.redAccent) ,
+            data: Theme.of(context)
+                .copyWith(unselectedWidgetColor: Colors.redAccent),
             child: Checkbox(
-              onChanged: (value) =>{
-                onSelect(state.url,value)
-              },
+              onChanged: (value) => {onSelect(state.url, value)},
               value: state.isSelected,
               activeColor: Colors.white,
               checkColor: Colors.blue,
             ),
-          )
-      )
-      );
-
+          )));
     }
     return Container(
-      padding: EdgeInsets.only(top: 10),
-      child: Stack(
-        alignment: Alignment.center,
-        children: children,
-      )
-    );
+        padding: EdgeInsets.only(top: 10),
+        child: Stack(
+          alignment: Alignment.center,
+          children: children,
+        ));
   }
 
-  // @override
-  // _PhotoState createState() => _PhotoState(url: url);
-
+// @override
+// _PhotoState createState() => _PhotoState(url: url);
 
 }
 
