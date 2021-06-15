@@ -4,8 +4,9 @@ import 'package:managing_state_flutter/main.dart';
 import 'package:managing_state_flutter/photo_state.dart';
 
 class Photo extends StatelessWidget {
+
   PhotoState state;
-  bool isSelected = false;
+  var isSelected = false;
 
   final Function onLongPress;
   final Function onSelect;
