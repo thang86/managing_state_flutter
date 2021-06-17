@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:provider/provider.dart';
 
 import 'gallery_page.dart';
 import 'photo_state.dart';
 
 void main() {
-  runApp(App());
+  runApp(ChangeNotifierProvider(create: (_) => AppState(), child: App()));
 }
 
 const List<String> urls = [
@@ -18,32 +18,16 @@ const List<String> urls = [
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<AppState>(
-        model: AppState(),
-        child: MaterialApp(
-          title: 'Photo Viewer',
-          home: ScopedModelDescendant<AppState>(
-            builder: (context, child, model) {
-              return GalleryPage(
-                  title: "Image Gallery",
-                  model: model
-              );
-            },
-          ),
-        )
-    );
+    return MaterialApp(
+        title: 'Photo Viewer', home: GalleryPage(title: "Image Gallery"));
   }
 }
 
-class AppState extends Model {
+class AppState with ChangeNotifier {
   bool isTagging = false;
   List<PhotoState> photoStates = List.of(urls.map((url) => PhotoState(url)));
 
   Set<String> tags = {'all', 'nature', 'cat'};
-
-  static AppState of(BuildContext context) {
-   return ScopedModel.of<AppState>(context);
-  }
 
   void selectTag(String tag) {
     if (isTagging) {
@@ -83,5 +67,4 @@ class AppState extends Model {
     });
     notifyListeners();
   }
-
 }

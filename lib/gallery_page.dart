@@ -1,44 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:managing_state_flutter/photo.dart';
-import 'package:managing_state_flutter/photo_state.dart';
+import 'package:provider/provider.dart';
 
 import 'main.dart';
 
 class GalleryPage extends StatelessWidget {
   final String title;
-  final AppState model;
 
-  GalleryPage({this.title, this.model});
+  GalleryPage({this.title});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(this.title)),
-      body: Builder(
-        builder: (BuildContext innerContext) {
-          return GridView.count(
-              primary: false,
-              crossAxisCount: 2,
-              children: List.of(model.photoStates
-                  .where((element) => element.display ?? true)
-                  .map((ps) => Photo(
-                        state: ps,
-                        model: AppState.of(context),
-                      ))));
-        },
-      ),
+      body: GridView.count(
+          primary: false,
+          crossAxisCount: 2,
+          children: List.of(context
+              .watch<AppState>()
+              .photoStates
+              .where((ps) => ps.display ?? true)
+              .map((ps) => Photo(state: ps)))),
       drawer: Drawer(
-        child: ListView(
-          children: List.of(model.tags.map((e) => ListTile(
-                title: Text(e),
-                onTap: () {
-                  model.selectTag(e);
-                  Navigator.of(context).pop();
-                },
-              ))),
-        ),
-      ),
+          child: ListView(
+        children: List.of(context.watch<AppState>().tags.map((t) => ListTile(
+              title: Text(t),
+              onTap: () {
+                context.read<AppState>().selectTag(t);
+                Navigator.of(context).pop();
+              },
+            ))),
+      )),
     );
   }
 }

@@ -2,22 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:managing_state_flutter/main.dart';
 import 'package:managing_state_flutter/photo_state.dart';
+import 'package:provider/provider.dart';
 
 class Photo extends StatelessWidget {
   final PhotoState state;
-  final AppState model;
 
-  Photo({this.state, this.model});
+  Photo({this.state});
 
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [
       GestureDetector(
           child: Image.network(state.url),
-          onLongPress: () => model.toggleTagging(state.url))
+          onLongPress: () => context.read<AppState>().toggleTagging(state.url))
     ];
 
-    if (model.isTagging) {
+    if (context.watch<AppState>().isTagging) {
       children.add(Positioned(
           left: 20,
           top: 0,
@@ -26,7 +26,7 @@ class Photo extends StatelessWidget {
                   .copyWith(unselectedWidgetColor: Colors.grey[200]),
               child: Checkbox(
                 onChanged: (value) {
-                  model.onPhotoSelect(state.url, value);
+                  context.read<AppState>().onPhotoSelect(state.url, value);
                 },
                 value: state.selected,
                 activeColor: Colors.white,
