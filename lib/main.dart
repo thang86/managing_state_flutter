@@ -5,7 +5,7 @@ import 'gallery_page.dart';
 import 'photo_state.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(create: (_) => AppState(), child: App()));
+  runApp(App());
 }
 
 const List<String> urls = [
@@ -18,8 +18,10 @@ const List<String> urls = [
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Photo Viewer', home: GalleryPage(title: "Image Gallery"));
+    return ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: MaterialApp(
+            title: 'Photo Viewer', home: GalleryPage(title: "Image Gallery")));
   }
 }
 

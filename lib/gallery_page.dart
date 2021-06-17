@@ -14,23 +14,29 @@ class GalleryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(this.title)),
-      body: GridView.count(
-          primary: false,
-          crossAxisCount: 2,
-          children: List.of(context
-              .watch<AppState>()
-              .photoStates
-              .where((ps) => ps.display ?? true)
-              .map((ps) => Photo(state: ps)))),
-      drawer: Drawer(
-          child: ListView(
-        children: List.of(context.watch<AppState>().tags.map((t) => ListTile(
-              title: Text(t),
-              onTap: () {
-                context.read<AppState>().selectTag(t);
-                Navigator.of(context).pop();
-              },
-            ))),
+      body: Consumer<AppState>(
+        builder: (context, appState, child) {
+          return GridView.count(
+              primary: false,
+              crossAxisCount: 2,
+              children: List.of(appState.photoStates
+                  .where((ps) => ps.display ?? true)
+                  .map((ps) => Photo(state: ps))));
+        },
+      ),
+      drawer: Drawer(child: Consumer<AppState>(
+        builder: (context, appState, child) {
+          return ListView(
+            children:
+                List.of(context.watch<AppState>().tags.map((t) => ListTile(
+                      title: Text(t),
+                      onTap: () {
+                        appState.selectTag(t);
+                        Navigator.of(context).pop();
+                      },
+                    ))),
+          );
+        },
       )),
     );
   }
