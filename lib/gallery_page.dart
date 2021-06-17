@@ -24,10 +24,7 @@ class GalleryPage extends StatelessWidget {
                   .where((element) => element.display ?? true)
                   .map((ps) => Photo(
                         state: ps,
-                        model: innerContext
-                            .dependOnInheritedWidgetOfExactType<
-                                MyInheritedWidget>()
-                            .state,
+                        model: AppState.of(context),
                       ))));
         },
       ),
