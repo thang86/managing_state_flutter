@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:managing_state_flutter/photo_state.dart';
 
 import 'gallery_page.dart';
+import 'photo_state.dart';
 
 void main() {
   runApp(App());
@@ -16,31 +16,62 @@ const List<String> urls = [
 
 class App extends StatefulWidget {
   @override
-  _AppState createState() => _AppState();
+  AppState createState() => AppState();
 }
 
-class _AppState extends State<App> {
-  bool isTagging = false;
-  List<PhotoState> photoStates = List.of(urls.map((item) => PhotoState(item)));
+class MyInheritedWidget extends InheritedWidget {
+  final AppState state;
 
-  void toggleTagging(url) {
+  MyInheritedWidget({Key key, @required Widget child, @required this.state})
+      : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(_) => true;
+}
+
+class AppState extends State<App> {
+  bool isTagging = false;
+  List<PhotoState> photoStates = List.of(urls.map((url) => PhotoState(url)));
+
+  Set<String> tags = {'all', 'nature', 'cat'};
+
+  void selectTag(String tag) {
+    setState(() {
+      if (isTagging) {
+        if (tag != "all") {
+          photoStates.forEach((element) {
+            if (element.selected) {
+              element.tags.add(tag);
+            }
+          });
+        }
+        toggleTagging(null);
+      } else {
+        photoStates.forEach((element) {
+          element.display = tag == "all" ? true : element.tags.contains(tag);
+        });
+      }
+    });
+  }
+
+  void toggleTagging(String url) {
     setState(() {
       isTagging = !isTagging;
       photoStates.forEach((element) {
         if (isTagging && element.url == url) {
-          element.isSelected = true;
+          element.selected = true;
         } else {
-          element.isSelected = false;
+          element.selected = false;
         }
       });
     });
   }
 
-  void onSelectPhoto(String url, bool selected) {
+  void onPhotoSelect(String url, bool selected) {
     setState(() {
       photoStates.forEach((element) {
         if (element.url == url) {
-          element.isSelected = selected;
+          element.selected = selected;
         }
       });
     });
@@ -49,12 +80,14 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: "Home App",
-        home: GalleryPage(
-            title: "Image Gallery",
-            photoStates: photoStates,
-            tagging: isTagging,
-            toggleTagging: toggleTagging,
-            onPhotoSelect: onSelectPhoto));
+        title: 'Photo Viewer',
+        home: MyInheritedWidget(
+            state: this,
+            child: Builder(builder: (BuildContext innerContext) {
+              return GalleryPage(
+                  title: "Image Gallery",
+                  model:innerContext.dependOnInheritedWidgetOfExactType<MyInheritedWidget>().state
+              );
+            })));
   }
 }

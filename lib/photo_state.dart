@@ -1,6 +1,8 @@
 class PhotoState {
   String url;
-  bool isSelected;
+  bool selected;
+  bool display ;
+  Set<String> tags ={};
 
-  PhotoState(this.url, {this.isSelected = false});
+  PhotoState(this.url, {selected = false,this.display= false,tags});
 }

@@ -3,34 +3,44 @@ import 'package:flutter/material.dart';
 import 'package:managing_state_flutter/photo.dart';
 import 'package:managing_state_flutter/photo_state.dart';
 
+import 'main.dart';
+
 class GalleryPage extends StatelessWidget {
   final String title;
-  final List<PhotoState> photoStates;
-  final bool tagging;
+  final AppState model;
 
-  final Function toggleTagging;
-  final Function onPhotoSelect;
-
-  GalleryPage(
-      {this.title,
-      this.photoStates,
-      this.tagging,
-      this.toggleTagging,
-      this.onPhotoSelect});
+  GalleryPage({this.title, this.model});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(this.title)),
-      body: GridView.count(
-        primary: true,
-        crossAxisCount: 2,
-        children: List.of(photoStates.map((e) => Photo(
-              state: e,
-              isSelected: tagging,
-              onLongPress: toggleTagging,
-              onSelect: onPhotoSelect,
-            ))),
+      body: Builder(
+        builder: (BuildContext innerContext) {
+          return GridView.count(
+              primary: false,
+              crossAxisCount: 2,
+              children: List.of(model.photoStates
+                  .where((element) => element.display ?? true)
+                  .map((ps) => Photo(
+                        state: ps,
+                        model: innerContext
+                            .dependOnInheritedWidgetOfExactType<
+                                MyInheritedWidget>()
+                            .state,
+                      ))));
+        },
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: List.of(model.tags.map((e) => ListTile(
+                title: Text(e),
+                onTap: () {
+                  model.selectTag(e);
+                  Navigator.of(context).pop();
+                },
+              ))),
+        ),
       ),
     );
   }
